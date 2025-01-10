@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 function handleDragStart(e: DragEvent) {
-  e.dataTransfer?.setData('field', 'text')
+  e.dataTransfer?.setData('text', 'add-field')
 }
 </script>
 
