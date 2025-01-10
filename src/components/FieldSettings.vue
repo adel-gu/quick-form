@@ -4,7 +4,10 @@
       <div class="flex items-center justify-between">
         <h2 class="text-3xl my-4" v-if="activeField.name">{{ activeField?.name }}</h2>
         <h2 class="text-3xl my-4" v-else>field name</h2>
-        <button class="bg-red-100 hover:bg-red-700 size-fit rounded-md px-1 py-0.5 transition-all">
+        <button
+          class="bg-red-100 hover:bg-red-700 size-fit rounded-md px-1 py-0.5 transition-all"
+          @click="removeField(activeField.id)"
+        >
           &#128465;
         </button>
       </div>
@@ -81,7 +84,7 @@
 import { useFieldStore } from '../stores/fields.ts'
 import { computed } from 'vue'
 
-const { getActiveField } = useFieldStore()
+const { getActiveField, removeField } = useFieldStore()
 
 const activeField = computed(() => getActiveField())
 </script>
