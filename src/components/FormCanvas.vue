@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul
-      class="mt-12 border rounded-md shadow w-[650px] min-h-[300px] px-2 py-6 space-y-5"
+      class="mt-24 border rounded-md shadow w-[650px] px-8 py-10 space-y-6"
       ref="parent"
       @drop="handleDrop"
       @dragover="allowDrop"
@@ -11,31 +11,15 @@
         :key="field.id"
         :index="index"
         class="hover:cursor-pointer"
+        :class="{ active: isActive === field.id }"
+        @click="setActiveField(field.id)"
       >
         <component
-          :is="getFieldComponent(field.type)"
+          :is="getFieldComponent()"
           :field="field"
-          class="relative z-0 m-4 pointer-events-none hover:pointer-events-none"
-          @click="handleSelectedField(field.id)"
+          class="relative z-0 pointer-events-none hover:pointer-events-none"
         />
       </li>
-      <!-- <div
-        v-for="(field, index) in derivedFields"
-        :key="index"
-        :index="index"
-        class="relative border border-purple-500"
-      >
-
-
-        <div class="hidden" :class="{ active: selectedField === field.id }">
-          <button
-            class="bg-red-400 p-1 rounded-md flex items-center justify-center absolute -top-8 right-0"
-            @click="handleRemoveField(field.id)"
-          >
-            <div>D</div>
-          </button>
-        </div>
-      </div> -->
     </ul>
   </div>
 </template>
@@ -44,42 +28,41 @@
 import { useDragAndDrop } from 'vue-fluid-dnd'
 import { storeToRefs } from 'pinia'
 import { useFieldStore } from '../stores/fields.ts'
-import { ref } from 'vue'
+import { computed } from 'vue'
 
 import TextField from './dynamic-fields/TextField.vue'
-import type { InputTypes } from '@/stores/fields.ts'
 
-const { fields } = storeToRefs(useFieldStore())
-const { selectActiveField, addField } = useFieldStore()
+const { setActiveField, addField } = useFieldStore()
+const { store } = storeToRefs(useFieldStore())
 
-const selectedField = ref('')
+const fields = computed(() => store.value.fields)
+const isActive = computed(() => store.value.activeField)
+
 const { parent } = useDragAndDrop(fields)
 
-function getFieldComponent(type: InputTypes) {
+function getFieldComponent() {
   const components = {
     text: TextField,
   }
-  return components[type]
-}
-
-function handleSelectedField(id: string) {
-  selectedField.value = selectActiveField(id) ?? ''
-  console.log(selectActiveField(id))
+  return components.text
 }
 
 function handleDrop(e: DragEvent) {
   e.preventDefault()
   const data = e.dataTransfer?.getData('field')
   if (data === 'text') {
-    addField(data ?? '')
+    addField()
   }
   e.dataTransfer?.clearData()
 }
 
 function allowDrop(e: DragEvent) {
   e.preventDefault()
-  console.log('dragin over')
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.active {
+  @apply border border-green-500;
+}
+</style>

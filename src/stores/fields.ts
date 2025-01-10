@@ -1,38 +1,41 @@
-import type { IField } from '../types/index.d.ts'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import type { IField } from '../types/index.d.ts'
 
-export enum InputTypes {
-  TEXT = 'text',
-}
-
-const TEXT_FIELD = {
-  type: InputTypes.TEXT,
-  label: 'Name',
-  placeholder: 'Enter your name',
+const DEFAULT_FIELD = {
+  type: 'text',
+  name: 'text',
+  label: 'Text',
+  placeholder: 'Enter your text',
   required: true,
 }
 
-const INITIAL_FIELDS = [TEXT_FIELD]
+export const useFieldStore = defineStore('fields_store', () => {
+  const store = ref<{ activeField: string; fields: IField[] }>({
+    activeField: '',
+    fields: [],
+  })
 
-export const useFieldStore = defineStore('fields', () => {
-  const fields = ref<IField[]>([])
-
-  function addField(type: string) {
+  function addField() {
     const uuid = `text-field-${Math.random().toString(36).slice(2, 9)}`
-    if (type) {
-      const field = INITIAL_FIELDS.find((field) => field.type === type)!
-      fields.value.push({ id: uuid, ...field })
-    }
+    store.value.fields.push({ id: uuid, ...DEFAULT_FIELD })
   }
 
-  function selectActiveField(id: string) {
-    return fields.value.find((field) => field.id === id)?.id
+  function setActiveField(id: string) {
+    store.value.activeField = store.value.fields.find((field) => field.id === id)?.id || ''
+  }
+
+  function getActiveField() {
+    return store.value.fields.find((field) => field.id === store.value.activeField)!
   }
 
   function removeField(id: string) {
-    fields.value = fields.value.filter((field) => field.id !== id)
+    const isCurrentActiveField = store.value.fields.find((field) => field.id === id)?.id
+    if (isCurrentActiveField) {
+      store.value.activeField = ''
+    }
+    store.value.fields = store.value.fields.filter((field) => field.id !== id)
   }
 
-  return { fields, addField, selectActiveField, removeField }
+  return { store, addField, setActiveField, getActiveField, removeField }
 })

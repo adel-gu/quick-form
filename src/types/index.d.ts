@@ -1,8 +1,7 @@
-import { InputTypes } from '@/stores/fields'
-
 export interface IField {
   id: string
-  type: InputTypes.TEXT
+  name: string
+  type: string
   label: string
   placeholder: string
   required?: boolean
