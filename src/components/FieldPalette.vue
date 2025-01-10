@@ -4,6 +4,8 @@
     <div class="h-[1px] mb-8 bg-gray-200" />
     <div
       class="flex items-center gap-4 px-4 py-3 hover:shadow-xl hover:cursor-pointer hover:bg-white rounded-md transition-all"
+      draggable="true"
+      @dragstart="handleDragStart"
     >
       <span
         class="bg-green-200 flex items-center justify-center p-3 rounded-md text-2xl font-semibold text-green-600"
@@ -17,6 +19,10 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+function handleDragStart(e: DragEvent) {
+  e.dataTransfer?.setData('field', 'text')
+}
+</script>
 
 <style scoped></style>
