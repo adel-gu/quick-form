@@ -10,6 +10,7 @@ This project is a Drag and Drop form Creator built with Vue.js to help me learn 
 - **Vue.js**
 - **TailwindCSS:** For styling the application.
 - **JavaScript:** For implementing interactive functionalities.
+- **TypeScript**
 - **Vue Draggable:** To handle drag-and-drop operations.
 
 ## Project Setup
